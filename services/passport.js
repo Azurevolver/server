@@ -18,28 +18,26 @@ passport.deserializeUser((id, done) => {
         })
 });
 
-
 passport.use(new GoogleStrategy({
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
         callbackURL: '/auth/google/callback'
-    }, (accessToken, refreshToken, profile, done) => {
-        console.log("[DEBUG] get call back from Google, accessToken = ", accessToken);
-        console.log("[DEBUG] profile => ", profile );
-        
-        User.findOne({ googleId: profile.id })
-            .then((existingUser) => {
-                // we already have a record with the progile id
-                if (existingUser) {
-                    console.log("[DEBUG] user exist");
-                    done(null, existingUser);
-                } else {
-                    // create data and save to MongoDB
-                    console.log("[DEBUG] create new user");
-                    new User({ googleId: profile.id })
-                        .save()
-                        .then(user => done(null, user));
-                }
-            });
-    })
+    }, 
+        async (accessToken, refreshToken, profile, done) => {
+            console.log("[DEBUG] get call back from Google, accessToken = ", accessToken);
+            console.log("[DEBUG] profile => ", profile );
+            
+            const existingUser = await User.findOne({ googleId: profile.id });
+            // we already have a record with the progile id
+            if (existingUser) {
+                console.log("[DEBUG] user exist");
+                done(null, existingUser);
+            } else {
+                // create data and save to MongoDB
+                console.log("[DEBUG] create new user");
+                const newUser = await new User({ googleId: profile.id }).save()
+                done(null, newUser);
+            }
+        }
+    )
 );
