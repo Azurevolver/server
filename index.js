@@ -17,6 +17,7 @@ mongoose.connect(keys.mongoURI);
 // init app
 const app = express();
 
+// 以下三個為middleware
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in mil sec
