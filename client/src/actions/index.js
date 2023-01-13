@@ -36,3 +36,19 @@ export const fetchUser = () => {
     }
     */
 }
+
+export const handleStripeToken = (token) => {
+    // token is from stripe, contain card info and the transaction id we need
+    console.log('[DEBUG] ACTION handleStripeToken token = ', token);
+    debugger;
+
+    return function(dispatch) {
+        axios.post('api/stripe', token)
+        .then((res) => {
+            dispatch ({
+                type: FETCH_USER,
+                payload: res.data
+            })
+        })
+    }
+}

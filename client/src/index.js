@@ -13,3 +13,6 @@ ReactDOM.render(
     <Provider store={store}><App/></Provider>,
     document.querySelector('#root')
 );
+
+// console.log('[DEBUG] current env => ', process.env.NODE_ENV);
+// console.log('[DEBUG] Stripe key => ', process.env.REACT_APP_STRIPE_KEY);

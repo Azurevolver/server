@@ -3,10 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 // create user schema
-require('./models/user');
+require('./models/User');
 
 // execute the whole passport.js file
 require('./services/passport');
@@ -17,7 +18,11 @@ mongoose.connect(keys.mongoURI);
 // init app
 const app = express();
 
-// 以下三個為middleware
+// ------------------- middleware ------------------- //
+// use bodyParser, allow req.body to have the request body
+app.use(bodyParser.json());
+
+// credential: cookie & passport
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in mil sec
@@ -28,9 +33,14 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// ------------------- middleware ------------------- //
+
+
 // import app routes
 const authRoutes = require('./routes/authRoutes');
 authRoutes(app);
+const billingRoutes = require('./routes/billingRoutes');
+billingRoutes(app);
 
 const PORT = process.env.PORT || 5000;
 var server = app.listen(PORT, function() {

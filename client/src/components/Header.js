@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Payments from './payments';
 
 class Header extends Component {
 
     renderSignInComponent() {
-        switch (this.props.doesUserSignIn) {
+        switch (this.props.user) {
             case null:
                 //  Still waiting for result
                 return;
@@ -16,7 +18,13 @@ class Header extends Component {
             default:
                 // login
                 return (
-                    <li><a href="sass.html">logout</a></li>
+                    [
+                        <li key='1'><Payments /></li>,
+                        <li key='3' style={{ margin: '0 1em'}}>
+                            Credits: {this.props.user.credits}
+                        </li>,
+                        <li key='2'><a href="/api/logout">logout</a></li>
+                    ]
                 );
         }
     }
@@ -26,7 +34,10 @@ class Header extends Component {
         return (
             <nav>
                 <div className="nav-wrapper">
-                    <a className="left brand-logo">Emaily</a>
+                    <Link 
+                        to={this.props.user ? '/surveys' : '/'} 
+                        className="left brand-logo"
+                    >Emaily</Link>
                     <ul className="right">
                         {this.renderSignInComponent()}
                     </ul>
@@ -37,7 +48,7 @@ class Header extends Component {
 }
 
 function mapStateToProps(state) {
-    return {doesUserSignIn: state.auth };
+    return {user: state.auth };
 }
 
 export default connect(mapStateToProps)(Header);
