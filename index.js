@@ -6,8 +6,9 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
-// create user schema
+// create MongoDB schema
 require('./models/User');
+require('./models/Survey');
 
 // execute the whole passport.js file
 require('./services/passport');
